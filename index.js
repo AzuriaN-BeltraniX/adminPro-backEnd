@@ -11,16 +11,15 @@ const app = express();
 // Configuración del CORS
 app.use( cors() );
 
+// Lectura y Parseo del BODY
+app.use(express.json());
+
 // Conexión a la Base de Datos.
 dbConnection();
 
 // Rutas
-app.get('/', (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'Hola Mundo'
-    })
-});
+app.use('/api/users', require('./routes/usersRoutes'));
+app.use('/api/login', require('./routes/auth'));
 
 // Esuchando el puerto 3000.
 const port = process.env.PORT; // Define el puerto...
@@ -33,5 +32,5 @@ app.listen(port, () => {
 
 // ------------------------------- Credenciales MongoDB ---
     // user: azbel
-    // password: 5Vxqbp2HQ7OvWH7K
+    // password: VsMhBuAMtsx5N6G6
 // --------------------------------------------------------
