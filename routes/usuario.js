@@ -7,7 +7,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 
-const { obtenerUsuarios, crearUsuarios, actualizarUsuarios, borrarUsuarios } = require('../controllers/users');
+const { obtenerUsuarios, crearUsuarios, actualizarUsuarios, borrarUsuarios } = require('../controllers/usuario');
 const { validarJWT } = require('../middlewares/validar-jwt');
  
 // Declaraciones

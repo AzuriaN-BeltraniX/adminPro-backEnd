@@ -14,13 +14,42 @@ const obtenerUsuarios = async(req, res) => {
             msg: 'Obteniendo Usuarios'
         });
     */
+   
+    // Filtrando número de usuarios mostrados:
+    const desde = Number(req.query.desde) || 0; // Obtiene el parámetro y lo transforma a número, si no exite, por defecto es 0
+    /* Prueba de data:
+        console.log(desde);
+    */
+    
+    /*
+        // Lista los usuarios existentes en la base de datos:
+        const usuarios = await Usuario
+            .find({}, 'nombre email role google') // También filtra parámetros
+            .skip(desde) // Muestra desde el número de usuario registrado
+            .limit(5) // Limita a 5 resultados
 
-    // Lista los usuarios existentes en la base de datos:
-    const usuarios = await Usuario.find({}, 'nombre email role google'); // También filtra parámetros
+        // Conteo de registros mostrados
+        const total = await Usuario.count();
+    */
+
+    // Promesa...
+    const [usuarios, total] = await Promise.all([ // Muestrame el resultado de las siguientes promesas:
+        // Lista los usuarios existentes en la base de datos:
+        Usuario
+            .find({}, 'nombre email role google img') // También filtra parámetros
+            .skip(desde) // Muestra desde el número de usuario registrado
+            .limit(5), // Limita a 5 resultados
+        
+        // Conteo de usuarios registrados
+        Usuario.countDocuments()
+    ]);
+
+    // Si se pudo ejecutar la búsqueda, entonces imprime el resultado de la petición.
     res.json({
         ok: true, // Listado exitoso!!!
         usuarios, // Lista de los usuarios existentes
-        userID: req.userID // Muestra la ID de usuario que realió la petición GET.
+        'Usuarios registrados': total, // Núemro total de registros
+        '¿Quién buscó?': `ID de Usuario: ${req.userID}` // Muestra la ID de usuario que realió la petición GET.
     })
 }
 
