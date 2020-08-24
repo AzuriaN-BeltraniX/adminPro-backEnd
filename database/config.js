@@ -19,6 +19,11 @@ const dbConnection = async () => {
 
 }
 
+// EnsureIndex Solition
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+
 // Modulos exportados
 module.exports = {
     dbConnection

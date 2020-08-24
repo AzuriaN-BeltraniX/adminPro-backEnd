@@ -4,8 +4,9 @@ const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/googleVerify');
 
-// Logging In
+// Controlador para iniciar sesión:
 const login = async(req, res = response) => {
     // Requiere del Correo Electrónico y Contraseña en el BODY:
     const { email, password } = req.body;
@@ -48,7 +49,62 @@ const login = async(req, res = response) => {
     }
 }
 
+// Controlador para iniciar sesión con Google:
+const googleSignIn = async(req, res = response) => {
+    // Requiere el Token del BODY:
+    const googleToken = req.body.token;
+
+    // Promesa...
+    try {
+        // Verifica el Token de Google:
+        const { name, email, picture } = await googleVerify(googleToken);
+
+        // Buscando un usuario existente mediante Correo Electrónico:
+        const usuarioDB = await Usuario.findOne({email});
+        let usuario; // Crea la variable "usuario"
+        if (!usuarioDB) { // Si no existe un usuario con el correo electrónico en la Base de datos, entonces:
+            usuario = new Usuario({ 
+                nombre: name,
+                email,
+                password: '@@@',
+                img: picture,
+                google: true
+            }); // ...Crea un nuevo usuario
+
+            // Si ya extrajo los datos de la autenticación y cambió el valor de google, entonces:
+            await usuario.save(); // ...Guarda el usuario en la base de datos
+            const token = await generarJWT(usuario.id); // ...Genera un token
+            res.json({ 
+                ok: true, // Autenticación exitosa!!!
+                token // Token del usuario
+            }); // ...Imprime el resultado de la petición:
+        } else { // Si sí existe el usuario, entonces...
+            usuario = usuarioDB; // Extrae el correo
+            usuario.google = true; // Modifica el valor de google a 'true'
+        }
+
+        /* Prueba de Data
+            res.json({
+                ok: true,
+                msg: 'googleSignIn is working!!!',
+                'Datos del usuario': {
+                    name,
+                    email,
+                    picture
+                }
+            });
+        */
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({
+            ok: false,
+            msg: 'El token no es válido o no existe...'
+        });
+    }
+}
+
 // Exportaciones
 module.exports = {
-    login
+    login,
+    googleSignIn
 }

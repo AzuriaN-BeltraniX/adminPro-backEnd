@@ -4,6 +4,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const { dbConnection } = require('./database/config');
+require('events').EventEmitter.defaultMaxListeners = 15;
 
 // Crear el servidor express.
 const app = express();
@@ -16,6 +17,9 @@ app.use(express.json());
 
 // Conexión a la Base de Datos.
 dbConnection();
+
+// Directorio público
+app.use(express.static('public'));
 
 // Rutas
 app.use('/api/users', require('./routes/usuario')); // Usuarios

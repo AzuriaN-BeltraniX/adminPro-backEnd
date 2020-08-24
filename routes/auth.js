@@ -4,13 +4,13 @@
 
 // Importaciones
 const { Router } = require('express');
-const { login } = require('../controllers/auth');
+const { login, googleSignIn } = require('../controllers/auth');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
 
-// Ruta de inicio de seción:
+// Ruta de inicio de sesión:
 router.post('/', 
     [
         check('email', 'El correo electrónico es obligatorio').isEmail(), // Verifica el correo en el Input
@@ -19,7 +19,14 @@ router.post('/',
     ],
     login
 )
-
+// Ruta de inicio de sesión con Google
+router.post('/google', 
+    [
+        check('token', 'El token de Google es obligatorio').not().isEmpty(), // Valida el Token de Google
+        validarCampos // Valida los campos de contraseña y correo electrónico
+    ],
+    googleSignIn
+)
 
 // Exportaciones
 module.exports = router;
