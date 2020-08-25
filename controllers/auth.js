@@ -103,8 +103,24 @@ const googleSignIn = async(req, res = response) => {
     }
 }
 
+// Controlador para generar un nuevo Token:
+const renewToken = async(req, res = response) => {
+    // Requiere del ID de usuario del BODY:
+    const userId = req.userId;
+
+    // Genera un nuevo token:
+    const token = await generarJWT(userId);
+
+    // Prueba de data
+    res.json({
+        ok: true,
+        token
+    });
+}
+
 // Exportaciones
 module.exports = {
     login,
-    googleSignIn
+    googleSignIn,
+    renewToken
 }

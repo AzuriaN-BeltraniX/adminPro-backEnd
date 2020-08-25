@@ -31,12 +31,17 @@ router.post('/',
 
 // Actualiza hospitales ---------------------------------------------
 router.put('/:id',
-    [],
+    [
+        validarJWT,
+        check('nombre', 'El nombre del hospital es necesario').not().isEmpty(),
+        validarCampos
+    ],
     actualizarHospital
 ); 
 
 // Borra un hospital ------------------------------------------------
 router.delete('/:id',
+    validarJWT,
     borrarHospital
 ); 
 

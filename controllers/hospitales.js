@@ -43,27 +43,83 @@ const crearHospital = async (req, res) => {
         console.log(error); // Imprime el error
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador... '
+            msg: 'Hable con el administrador, o verifique inicio de sesión...'
         }); // Muestra el mensaje de error
     }
 }
 
 // Controlador para actualizar un hospital
-const actualizarHospital = (req, res) => {
-    // Prueba de data
-    res.json({
-        ok: true,
-        msg: 'actualizarHospital is working!!!'
-    });
+const actualizarHospital = async (req, res) => {
+    // Requiere el ID del hospital a actualizar:
+    const id = req.params.id; // ID del hospital
+    const userID = req.userID; // ID del usuario que actualiza
+
+    // Promesa...
+    try {
+        // Actualizando el nombre de un Hospital
+        const hospital = await Hospital.findById(id); // Busca un hospital mediante ID
+        if (!hospital) { // Si no existe el hospital solicitado, entonces...
+            return res.status(404).json({ // Muestra el estado de la petición...
+                ok: false,
+                msg: 'Hospital no encontrado, proporcione una ID válida'
+            }); // Retorna mensaje de error.
+        }
+
+        // Si existe el hospital, entonces...
+        const cambiosHospital = { ...req.body, usuario: userID} ; // Extrae el nombre proporcionado
+        // ...Guarda los cambios en al base de datos
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, { new: true });
+
+        // ...Muestra el resultado de la petición
+        res.json({
+            ok: true,
+            msg: 'Hospital actualizado exitosamente!!!',
+            'Datos nuevos del Hospital': hospitalActualizado
+        });
+    } catch (error) { // Si no se puede actualizar el hospital, entonces:
+        console.log(error); // ...Imprime el error en consola
+        res.status(500).json({ // ...Muestra el estado de la petición
+            ok: false,
+            msg: 'Hable con el administrador...'
+        }); // ... Muestra el mensaje de error
+    }
 }
 
 // Controlador para eliminar un hospital
-const borrarHospital = (req, res) => {
-    // Prueba de data
-    res.json({
-        ok: true,
-        msg: 'borrarHospital is working!!!'
-    });
+const borrarHospital = async (req, res) => {
+    // Requiere el ID del hospital a actualizar:
+    const id = req.params.id; // ID del hospital
+
+    // Promesa...
+    try {
+        // Borrando un Hospital:
+        const hospital = await Hospital.findById(id); // Busca un hospital mediante ID
+        if (!hospital) { // Si no existe el hospital solicitado, entonces...
+            return res.status(404).json({ // Muestra el estado de la petición...
+                ok: false,
+                msg: 'Hospital no encontrado, proporcione un ID válido'
+            }); // Retorna mensaje de error.
+        }
+
+        // Si exite el hospital, entonces...
+        await Hospital.findOneAndDelete(id); // Borra el hospital seleccionado
+ 
+        // ...Muestra el resultado de la petición
+        res.json({
+            ok: true,
+            msg: 'Hospital borrado exitosamente!!!',
+            '¿Cuál se eliminó?': {
+                nombre: hospital.nombre,
+                id: hospital.id
+            }
+        });
+    } catch (error) { // Si no se puede borrar el hospital, entonces:
+        console.log(error); // ...Imprime el error en consola
+        res.status(500).json({ // ...Muestra el estado de la petición
+            ok: false,
+            msg: 'Hable con el administrador...'
+        }); // ... Muestra el mensaje de error
+    }
 }
 
 // Exportaciones

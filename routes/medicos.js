@@ -32,7 +32,12 @@ router.post('/',
 
 // Actualiza Medicos ---------------------------------------------
 router.put('/:id',
-    [],
+    [
+        validarJWT, // Valida el token del usuario logeado
+        check('nombre', 'El nombre del médico es obligatorio').not().isEmpty(), // Valida el campo del nombre
+        check('hospital', 'La ID del hospital ingresado debe ser válido').isMongoId(), // Valida si el hospital existe
+        validarCampos // Valida los datos de los campos.
+    ],
     actualizarMedico
 ); 
 
