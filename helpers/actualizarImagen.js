@@ -59,7 +59,7 @@ const actualizarImagen = async (tipo, id, nomArchivo) => {
             // Verifica si el tipo es un Usuario mediante un ID:
             const usuario = await Usuario.findById(id);
             if (!usuario) { // Si el ID no pertenece a un usuario, entonces...
-                console.log('No se encontró un hospital por ID'); // Imprime mensaje,
+                console.log('No se encontró un usuario por ID'); // Imprime mensaje,
                 return false; // Retorna un valor falso
             }
 

@@ -142,7 +142,15 @@ const actualizarUsuarios = async(req, res = response) => {
             }
         }
 
-        campos.email = email; // Email a actualizar:
+        // Actualiza el correo siempre y cuando el usuario no provenga de Google, entonces...
+        if (!usuarioDB.google) {
+            campos.email = email; // Email a actualizar:
+        } else if (usuarioDB.email !== email) { // Si el correo de google es diferente e intenta actualizar, entonces:
+            return res.status(400).json({
+                ok: false,
+                msg: 'Un usuario de Google no puede actualizar su correo electrónico...'
+            }); // Retorna un mensaje de error.
+        }
 
         // Actualiza el usuario requiriendo el ID de usuario
         const usuarioActualizado = await Usuario.findByIdAndUpdate(userID, campos, {new: true}); // (muestra actualización inmediata).

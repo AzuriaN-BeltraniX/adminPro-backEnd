@@ -18,7 +18,7 @@ const login = async(req, res = response) => {
         if (!usuarioDB) { // Si no encuentra el correo solicitado, entonces:
             return res.status(404).json ({
                 ok: false,
-                msg: "Correo no válido?..."
+                msg: "El correo no es válido"
             }); // Retorna el mensaje de error.
         }
 
@@ -27,18 +27,22 @@ const login = async(req, res = response) => {
         if (!validPassword) { // Si la contraseña no es válida, entonces...
             return res.status(400).json({
                 ok: false,
-                msg: "La contraseña no es válida"
+                msg: "La contraseña es incorrecta"
             }); // Retorna el mensaje de error
         }
 
         // Si el correo y contraseñas son válidas, entonces genera un TOKEN (JWT):
         const token = await generarJWT(usuarioDB.id);
 
+        // Obteniendo los datos del ususario mediante ID
+        // const usuario = await Usuario.findById(usuarioDB.id);
+
         // Prueba de data:
         res.json({
             ok: true,
          // msg: 'LogIn en funcionamiento!!!'
-            token // Muestra el token.
+            token, // Muestra el token
+            // usuario // Muestra al usuario logueado
         })
     } catch(error) { // Si hay error entonces...
         console.log(error); // Imprime el error
@@ -51,6 +55,7 @@ const login = async(req, res = response) => {
 
 // Controlador para iniciar sesión con Google:
 const googleSignIn = async(req, res = response) => {
+    // console.log('Entró GoogleSignIn en el Backend');
     // Requiere el Token del BODY:
     const googleToken = req.body.token;
 
@@ -74,13 +79,23 @@ const googleSignIn = async(req, res = response) => {
             // Si ya extrajo los datos de la autenticación y cambió el valor de google, entonces:
             await usuario.save(); // ...Guarda el usuario en la base de datos
             const token = await generarJWT(usuario.id); // ...Genera un token
+            // console.log('Resp en auth controller', usuario.id);
             res.json({ 
                 ok: true, // Autenticación exitosa!!!
                 token // Token del usuario
             }); // ...Imprime el resultado de la petición:
         } else { // Si sí existe el usuario, entonces...
+            // console.log('Usuario existente googleSignIn');
             usuario = usuarioDB; // Extrae el correo
             usuario.google = true; // Modifica el valor de google a 'true'
+            const token = await generarJWT(usuario.id); // ...Genera un token
+
+            res.json({ 
+                ok: true, // Autenticación exitosa!!!
+                token // Token del usuario
+            }); // ...Imprime el resultado de la petición:
+
+            
         }
 
         /* Prueba de Data
@@ -105,16 +120,20 @@ const googleSignIn = async(req, res = response) => {
 
 // Controlador para generar un nuevo Token:
 const renewToken = async(req, res = response) => {
-    // Requiere del ID de usuario del BODY:
-    const userId = req.userId;
+    // Requiere del ID de usuario:
+    const userID = req.userID;
 
     // Genera un nuevo token:
-    const token = await generarJWT(userId);
+    const token = await generarJWT(userID);
+
+    // // Obteniendo los datos del ususario mediante ID
+    const usuario = await Usuario.findById(userID);
 
     // Prueba de data
     res.json({
         ok: true,
-        token
+        token,
+        usuario
     });
 }
 

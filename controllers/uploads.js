@@ -65,7 +65,8 @@ const fileUpload = (req, res = response) => {
         res.json({
             ok: true,
             msg: 'Archivo subido exitosamente',
-            'Nombre del archivo': nomArchivo
+            // 'Nombre del archivo': nomArchivo
+            nomArchivo
         });
     });
 }
@@ -83,7 +84,7 @@ const muestraImagen = (req, res = response) => {
     if (fs.existsSync(pathImg)) {
         res.sendFile(pathImg);
     } else { // Si no existe una imagen personalizada, entonces...
-        const pathImg = path.join(__dirname, `../uploads/noImage.png`);
+        const pathImg = path.join(__dirname, `../uploads/noImage.svg`);
         res.sendFile(pathImg); // Muestra la imagen por defecto.
     }
 }
