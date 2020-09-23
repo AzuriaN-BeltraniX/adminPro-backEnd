@@ -7,7 +7,7 @@ const Hospital = require('../models/hospitales');
 const obtenerHospital = async (req, res) => {
     // Obteniendo los hospitales:
     const hospitales = await Hospital.find() // Busca los hospitales
-        .populate('usuario', 'nombre') // Muestra todos los datos del usuario que hizo el registro.
+        .populate('usuario', 'nombre role') // Muestra todos los datos del usuario que hizo el registro.
 
     // Imprimiendo al respuesta de la petición
     res.json({
@@ -102,7 +102,7 @@ const borrarHospital = async (req, res) => {
         }
 
         // Si exite el hospital, entonces...
-        await Hospital.findOneAndDelete(id); // Borra el hospital seleccionado
+        await Hospital.findByIdAndDelete(id); // Borra el hospital seleccionado
  
         // ...Muestra el resultado de la petición
         res.json({

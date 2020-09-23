@@ -17,6 +17,31 @@ const obtenerMedico = async (req, res) => {
     });
 }
 
+// Controlador para obtener un Médico mediante el ID desde el URL
+const obtenerMedicoPorId = async (req, res) => {
+    // Requiere el ID del médico seleccionado
+    const id = req.params.id;
+
+    try {
+        // Listando los médicos registrados
+        const medico = await Medico.findById(id) // Busca los médicos registados
+            .populate('usuario', 'nombre img') // Imprime que usuario lo creo
+            .populate('hospital', 'nombre img') // Imprime el hospital al que pertenece
+
+        // Respuesta de la petición:
+        res.json({
+            ok: true, // Listado exitoso!!!
+            medico // Obteniendo lista de médicos regitrados en la Base de Datos
+        });  
+    } catch (error) {
+        // Respuesta de la petición:
+        res.json({
+            ok: false, // Listado fallido...
+            msg: 'Hable con el administrador...' // Mensaje de error
+        });  
+    }
+}
+
 // Controlador para crear un Médico
 const crearMedico = async (req, res) => {
     // Registrando un médico:
@@ -121,6 +146,7 @@ const borrarMedico = async(req, res) => {
 // Exportaciones
 module.exports = {
     obtenerMedico,
+    obtenerMedicoPorId,
     crearMedico,
     actualizarMedico,
     borrarMedico

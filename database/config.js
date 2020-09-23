@@ -4,8 +4,11 @@ const mongoose = require('mongoose');
 // Promesa de conexión a MongoDB
 const dbConnection = async () => {
 
+    // pathViejo: 'mongodb+srv://azbel:VsMhBuAMtsx5N6G6@cluster0.v2wru.mongodb.net/hospitaldb'
+    // pathNuevo: 'mongodb://localhost:27020/adminPro'
+
     try {
-        await mongoose.connect('mongodb+srv://azbel:VsMhBuAMtsx5N6G6@cluster0.v2wru.mongodb.net/hospitaldb',
+        await mongoose.connect('mongodb://localhost:27020/adminPro',
         {
             useNewUrlParser: true,
             useUnifiedTopology: true

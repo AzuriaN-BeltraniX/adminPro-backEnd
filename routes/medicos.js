@@ -1,5 +1,5 @@
 /* Médicos:
-    RUTA Padre: '/api/medics'
+    RUTA Padre: '/api/doctors'
 */
 
 // Importaciones
@@ -9,7 +9,7 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
-const { obtenerMedico, crearMedico, actualizarMedico, borrarMedico } = require('../controllers/medicos');
+const { obtenerMedico, crearMedico, actualizarMedico, borrarMedico, obtenerMedicoPorId } = require('../controllers/medicos');
  
 // Declaraciones
 const router = Router();
@@ -17,7 +17,7 @@ const router = Router();
 // Rutas:
 
 // Obtiene los Medicos -------------------------------------------
-router.get('/', obtenerMedico);
+router.get('/', validarJWT, obtenerMedico);
 
 // Crea Medicos --------------------------------------------------
 router.post('/',
@@ -43,7 +43,14 @@ router.put('/:id',
 
 // Borra un Medico ------------------------------------------------
 router.delete('/:id',
+    validarJWT,
     borrarMedico
+); 
+
+// Obtiene un Medico mediante ID en la URL ------------------------
+router.get('/:id',
+    validarJWT,
+    obtenerMedicoPorId
 ); 
 
 // Exportaciones

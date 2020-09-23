@@ -25,6 +25,7 @@ app.use(express.static('public'));
 app.use('/api/users', require('./routes/usuario')); // Usuarios
 app.use('/api/hospitals', require('./routes/hospitales')); // Hospitales
 app.use('/api/doctors', require('./routes/medicos')); // Médicos
+app.use('/api/doctor', require('./routes/medicos')); // Médicos
 app.use('/api/login', require('./routes/auth')); // Inicio de Sesión
 app.use('/api/search', require('./routes/busquedas')); // Búsqueda global
 app.use('/api/search/collection', require('./routes/busquedas')); // Búsqueda por colección

@@ -29,7 +29,7 @@ const actualizarImagen = async (tipo, id, nomArchivo) => {
 
             // Si el médico ya tiene una imagen asignada, entonces elimina la anterior:
             pathViejo = `./uploads/doctors/${medico.img}`; // Captura el archivo...
-            borrarImagen(); // Borra la imagen.
+            borrarImagen(pathViejo); // Borra la imagen.
 
             // Captura el nombre y actualiza el archivo:
             medico.img = nomArchivo; // Determina la ubicación del nombre del archivo...
@@ -47,7 +47,7 @@ const actualizarImagen = async (tipo, id, nomArchivo) => {
 
             // Si el hospital ya tiene una imagen asignada, entonces elimina la anterior:
             pathViejo = `./uploads/hospitals/${hospital.img}`; // Captura el archivo...
-            borrarImagen(); // Borran la imagen.
+            borrarImagen(pathViejo); // Borran la imagen.
 
             // Captura el nombre y actualiza el archivo
             hospital.img = nomArchivo; // Determina la ubicación del nombre del archivo
@@ -64,8 +64,8 @@ const actualizarImagen = async (tipo, id, nomArchivo) => {
             }
 
             // Si el usuario ya tiene una imagen asignada, entonces elimina la anterior:
-            pathViejo = `./uploads/hospitals/${usuario.img}`; // Captura el archivo...
-            borrarImagen(); // Borra la imagen.
+            pathViejo = `./uploads/users/${usuario.img}`; // Captura el archivo...
+            borrarImagen(pathViejo); // Borra la imagen.
 
             // Captura el nombre y actualiza el archivo
             usuario.img = nomArchivo; // Determina la ubicación del nombre del archivo

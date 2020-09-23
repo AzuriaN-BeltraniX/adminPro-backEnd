@@ -48,6 +48,7 @@ const obtenerUsuarios = async(req, res) => {
     res.json({
         ok: true, // Listado exitoso!!!
         usuarios, // Lista de los usuarios existentes
+        total,
         'Usuarios registrados': total, // Núemro total de registros
         '¿Quién buscó?': `ID de Usuario: ${req.userID}` // Muestra la ID de usuario que realió la petición GET.
     })
