@@ -8,10 +8,10 @@ const { Router } = require('express');
 const router = Router();
 
 const { validarJWT } = require('../middlewares/validar-jwt');
-const { obtenerBusquedaUsuario, obtenerDocumentosColeccion } = require('../controllers/busquedas');
+const { obtenerBusquedaTotal, obtenerDocumentosColeccion } = require('../controllers/busquedas');
 
 // Obtener la búsqueda de un Usuario mediante un ID existente: ------
-router.get('/:busqueda', validarJWT, obtenerBusquedaUsuario)
+router.get('/all/:busqueda', validarJWT, obtenerBusquedaTotal)
 router.get('/collection/:tabla/:busqueda', validarJWT, obtenerDocumentosColeccion)
 
 // Exportaciones

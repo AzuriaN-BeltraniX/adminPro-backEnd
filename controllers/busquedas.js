@@ -6,7 +6,7 @@ const Medico = require('../models/medicos');
 const Hospital = require('../models/hospitales');
 
 // Controlador para realizar una búsqueda por ID de usuario existente: 
-const obtenerBusquedaUsuario = async (req, res = response) => {
+const obtenerBusquedaTotal = async (req, res = response) => {
     // Realizando la búsqueda:
     const busqueda = req.params.busqueda; // Requiere el parámetro de búsqueda
     const regex = new RegExp(busqueda, 'i'); // Declarando expresión regular de búsqueda insensible.
@@ -14,8 +14,10 @@ const obtenerBusquedaUsuario = async (req, res = response) => {
     // Promesa...
     const [ usuarios, medicos, hospitales ] = await Promise.all([
         Usuario.find({nombre: regex}), // Búsqueda de usuarios
-        Medico.find({nombre: regex}), // Búsqueda de usuarios
-        Hospital.find({nombre: regex}) // Búsqueda de usuarios
+        Medico.find({nombre: regex})
+            .populate('usuario', 'nombre img')
+            .populate('hospital', 'nombre img'), // Búsqueda de médicos
+        Hospital.find({nombre: regex}) // Búsqueda de hospitales
     ]);
 
     // Prueba de data:
@@ -78,6 +80,6 @@ const obtenerDocumentosColeccion = async (req, res = response) => {
 
 // Exportaciones
 module.exports = {
-    obtenerBusquedaUsuario,
+    obtenerBusquedaTotal,
     obtenerDocumentosColeccion
 }

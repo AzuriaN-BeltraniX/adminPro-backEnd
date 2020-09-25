@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/googleVerify');
+const { getMenuFrontEnd } = require('../helpers/menuFrontEnd');
 
 // Controlador para iniciar sesión:
 const login = async(req, res = response) => {
@@ -32,7 +33,7 @@ const login = async(req, res = response) => {
         }
 
         // Si el correo y contraseñas son válidas, entonces genera un TOKEN (JWT):
-        const token = await generarJWT(usuarioDB.id);
+        const token = await generarJWT(usuarioDB.id, usuarioDB.role);
 
         // Obteniendo los datos del ususario mediante ID
         // const usuario = await Usuario.findById(usuarioDB.id);
@@ -40,10 +41,12 @@ const login = async(req, res = response) => {
         // Prueba de data:
         res.json({
             ok: true,
-         // msg: 'LogIn en funcionamiento!!!'
+            // msg: 'LogIn en funcionamiento!!!'
             token, // Muestra el token
-            // usuario // Muestra al usuario logueado
+            menu: getMenuFrontEnd(usuarioDB.role) // Muestra el menu del Sidebar dependiendo su Role de Usuario
         })
+
+        // console.log(`Rol de usuario: ${usuarioDB}`);
     } catch(error) { // Si hay error entonces...
         console.log(error); // Imprime el error
         res.status(500).json({
@@ -92,7 +95,8 @@ const googleSignIn = async(req, res = response) => {
 
             res.json({ 
                 ok: true, // Autenticación exitosa!!!
-                token // Token del usuario
+                token, // Token del usuario
+                menu: getMenuFrontEnd(usuario.role) // Muestra el menu del Sidebar dependiendo su Role de Usuario
             }); // ...Imprime el resultado de la petición:
 
             
@@ -120,11 +124,12 @@ const googleSignIn = async(req, res = response) => {
 
 // Controlador para generar un nuevo Token:
 const renewToken = async(req, res = response) => {
-    // Requiere del ID de usuario:
-    const userID = req.userID;
+    // Requiere de lo siguientes parámetros:
+    const userID = req.userID; // Rescata ID del usuario logueado
+    const role = req.role; // Rescata el rol del usuario logueado
 
     // Genera un nuevo token:
-    const token = await generarJWT(userID);
+    const token = await generarJWT(userID, role);
 
     // // Obteniendo los datos del ususario mediante ID
     const usuario = await Usuario.findById(userID);
@@ -132,9 +137,10 @@ const renewToken = async(req, res = response) => {
     // Prueba de data
     res.json({
         ok: true,
-        token,
-        usuario
-    });
+        token, // Meustra el token renovado
+        usuario, // Muestra el usuario del token renovado
+        menu: getMenuFrontEnd(usuario.role) // Muestra el menu del Sidebar dependiendo su Role de Usuario
+    }); // Token renovado exitosamente
 }
 
 // Exportaciones

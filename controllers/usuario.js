@@ -7,6 +7,7 @@ const { generarJWT } = require('../helpers/jwt');
 
 // Controlador para obtener usuarios:
 const obtenerUsuarios = async(req, res) => {
+
     /* Prueba de data:
         res.json({
             ok: true,
