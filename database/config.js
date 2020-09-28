@@ -8,7 +8,8 @@ const dbConnection = async () => {
     // pathNuevo: 'mongodb://localhost:27020/adminPro'
 
     try {
-        await mongoose.connect('mongodb://localhost:27020/adminPro',
+        // await mongoose.connect('mongodb://localhost:27020/adminPro',
+        await mongoose.connect('mongodb+srv://azbel:VsMhBuAMtsx5N6G6@cluster0.v2wru.mongodb.net/hospitaldb',
         {
             useNewUrlParser: true,
             useUnifiedTopology: true
