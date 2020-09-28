@@ -2,6 +2,7 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
+const path = require('path');
 
 const { dbConnection } = require('./database/config');
 require('events').EventEmitter.defaultMaxListeners = 15;
@@ -30,6 +31,11 @@ app.use('/api/login', require('./routes/auth')); // Inicio de Sesión
 app.use('/api/search', require('./routes/busquedas')); // Búsqueda global
 app.use('/api/search/collection', require('./routes/busquedas')); // Búsqueda por colección
 app.use('/api/upload', require('./routes/uploads')); // Archivos
+
+// Comodín
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
 
 // Esuchando el puerto 3000.
 const port = process.env.PORT; // Define el puerto...
